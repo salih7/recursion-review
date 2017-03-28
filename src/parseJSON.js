@@ -18,8 +18,8 @@ var parseJSON = function(json) {
 
   if (json.charAt(0) === '[' && json.charAt(json.length - 1) === ']') {
   	var jsonNoSpace = json.replace(/\s/g, '');
-  	var jsonSplitArr = jsonNoSpace.replace(/\[|\]/g, '').split(', ');
-
+  	var jsonSplitArr = jsonNoSpace.replace(/\[|\]/g, '').split(',');
+    
   	if (json.length === 2) {
 		return [];
 	}
@@ -33,15 +33,16 @@ var parseJSON = function(json) {
 
   if (json.charAt(0) === '{' && json.charAt(json.length - 1) === '}') {
   	var jsonObj = {};
-  	//var jsonNoSpace = json.replace(/\s/g, '');
-  	var jsonSplitArr = json.replace(/[{}]/g, '').match(/"\w+,\s?\w*":\s?\w+/g);
+  	var jsonSplitArr = json.replace(/[{}]/g, '').match(/"\w+,?\s?\w*":\s?"?\w*"?/g);
+    
 
-	if (json.length === 2) {
+	if (jsonSplitArr === null || json.length === 2) {
 		return jsonObj;
 	}
 
 	for (var i = 0; i < jsonSplitArr.length; i++) {
-		var indexColon = jsonSplitArr[i].indexOf(':');
+		jsonSplitArr[i] = jsonSplitArr[i].replace(/:\s/g, ':');
+    var indexColon = jsonSplitArr[i].indexOf(':');
 		var prop = jsonSplitArr[i].slice(0, indexColon);
 		var val = jsonSplitArr[i].slice(indexColon + 1, jsonSplitArr[i].length);
 
